@@ -17,13 +17,18 @@ declare module ReduxActions {
 
     type Reducer<T> = (state: T, action: Action) => T;
 
+    type ReducerNextThrow<T> {
+        next: Reducer<T>;
+        throw: Reducer<T>;
+    };
+    
     type ReducerMap<T> = {
-        [actionType: string]: Reducer<T>
+        [actionType: string]: Reducer<T> | ReducerNextThrow<T>
     };
 
     export function createAction<T>(actionType: string, payloadCreator?: PayloadCreator<T>, metaCreator?: MetaCreator): (...args: any[]) => Action;
 
-    export function handleAction<T>(actionType: string, reducer: Reducer<T> | ReducerMap<T>): Reducer<T>;
+    export function handleAction<T>(actionType: string, reducer: Reducer<T> | ReducerNextThrow<T>): Reducer<T>;
 
     export function handleActions<T>(reducerMap: ReducerMap<T>, initialState?: T): Reducer<T>;
 }
